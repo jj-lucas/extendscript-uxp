@@ -9,6 +9,7 @@ export const Home = () => {
 	const [styleToReplaceTo, setStyleToReplaceTo] = useState()
 
 	useEffect(() => {
+		// prepare a list of available styles to replace (those used within the active spread)
 		const pageItems = app.activeWindow.activeSpread.allPageItems
 		const initialStyles = []
 		pageItems.map(pageItem => {
@@ -24,16 +25,19 @@ export const Home = () => {
 	}, [])
 
 	const replaceStyles = () => {
-		const pageItems = app.activeWindow.activeSpread.allPageItems
-		const targetStyle = availableStyles.find(style => style.name === styleToReplaceTo).style
 		let affectedItems = 0
+		const targetStyle = availableStyles.find(style => style.name === styleToReplaceTo)
+		// iterate page items
+		const pageItems = app.activeWindow.activeSpread.allPageItems
 		pageItems.map(pageItem => {
 			const appliedStyle = pageItem.appliedObjectStyle
-			if (appliedStyle.name === styleToReplace) {
-				pageItem.applyObjectStyle(targetStyle)
+			// if the applied style of the iterated item is different than the target one, replace it
+			if (appliedStyle.name === styleToReplace && targetStyle) {
+				pageItem.applyObjectStyle(targetStyle.style)
 				affectedItems++
 			}
 		})
+		// log results
 		if (affectedItems) {
 			alert(`Affected ${affectedItems} items`)
 		}
