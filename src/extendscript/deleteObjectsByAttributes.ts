@@ -24,8 +24,7 @@ const SHAPE_LABELS_TO_OBJECT_TYPES: { [key: string]: string } = {
 const showDialog = () => {
 	// add a dialog
 	const dialog = app.dialogs.add({ name: 'Select objects by attribute' })
-	const columnText = dialog.dialogColumns.add({})
-	const borderPanel = columnText.borderPanels.add({})
+	const column = dialog.dialogColumns.add({})
 
 	// keep a reference to the controls we will add
 	let controls: {
@@ -44,6 +43,8 @@ const showDialog = () => {
 	}
 
 	// populate shapes
+	const shapesRow = column.dialogRows.add({})
+	const borderPanel = shapesRow.borderPanels.add({})
 	borderPanel.staticTexts.add({ staticLabel: 'Shape:' })
 	const columnShapes = borderPanel.dialogColumns.add({})
 	for (let i: number = 0; i < SHAPE_LABELS.length; i++) {
@@ -56,6 +57,8 @@ const showDialog = () => {
 	// populate colors
 	const colors = app.activeDocument.colors
 	if (colors.length) {
+		const colorsRow = column.dialogRows.add({})
+		const borderPanel = colorsRow.borderPanels.add({})
 		borderPanel.staticTexts.add({ staticLabel: 'Color:' })
 		const columnColors = borderPanel.dialogColumns.add({})
 		for (let i: number = 0; i < colors.length; i++) {
