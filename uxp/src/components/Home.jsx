@@ -1,42 +1,71 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from '@adobe/react-spectrum'
 
+const app = window.require('indesign').app
+
 export const Home = () => {
-	const [availableStyles, setAvailableStyles] = useState(['Black', 'White', 'Green']) // this would have been filled on load
+	const [availableStyles, setAvailableStyles] = useState([])
+	const [styleToReplace, setStyleToReplace] = useState()
+	const [styleToReplaceTo, setStyleToReplaceTo] = useState()
 
 	useEffect(() => {
-		const app = window.require('indesign').app
 		const pageItems = app.activeWindow.activeSpread.allPageItems
-		// page items is an empty object?
-		// for (let i = 0; i < pageItems.length; i++) {
-		// 	console.log(pageItems[i])
-		// }
-
-		// TODO
-
-		// fill availableStyles based on styles available in document
+		const initialStyles = []
+		pageItems.map(pageItem => {
+			const appliedStyle = pageItem.appliedObjectStyle
+			if (!initialStyles.filter(style => style.name === appliedStyle.name).length) {
+				initialStyles.push({
+					name: appliedStyle.name,
+					style: appliedStyle,
+				})
+			}
+		})
+		setAvailableStyles(initialStyles)
 	}, [])
 
-	// TODO: add a handler that records the "from" and "to" styles when the select boxes change value
-
-	// TODO: add a handler called from the Button that does the style replace
+	const replaceStyles = () => {
+		const pageItems = app.activeWindow.activeSpread.allPageItems
+		const targetStyle = availableStyles.find(style => style.name === styleToReplaceTo).style
+		let affectedItems = 0
+		pageItems.map(pageItem => {
+			const appliedStyle = pageItem.appliedObjectStyle
+			if (appliedStyle.name === styleToReplace) {
+				pageItem.applyObjectStyle(targetStyle)
+				affectedItems++
+			}
+		})
+		if (affectedItems) {
+			alert(`Affected ${affectedItems} items`)
+		}
+	}
 
 	return (
 		<div>
 			<div>
-				<h2>Style to replace</h2>
+				<h3>Style to replace</h3>
 				<select
 					onChange={e => {
-						// not firing event handler?
-						console.log(e)
+						setStyleToReplace(e.target.value)
 					}}>
-					{availableStyles.map(activeStyle => (
-						<option key={activeStyle}>{activeStyle}</option>
+					{availableStyles.map(availableStyle => (
+						<option key={`from_${availableStyle.name}`}>{availableStyle.name}</option>
 					))}
 				</select>
+				<h3>Style to replace to</h3>
+				<select
+					onChange={e => {
+						setStyleToReplaceTo(e.target.value)
+					}}>
+					{['Black Box', 'White Box', '[None]']
+						.filter(style => style !== styleToReplace)
+						.map(style => (
+							<option key={`to_${style}`}>{style}</option>
+						))}
+				</select>
 			</div>
-			{/* Spectrum button styling is buggy? */}
-			<Button variant={'primary'}>Replace</Button>
+			<Button variant={'primary'} onClick={replaceStyles}>
+				Replace
+			</Button>
 		</div>
 	)
 }
