@@ -16,9 +16,21 @@ const main = () => {
 
 const SHAPE_LABELS = ['Rectangles', 'Polygons', 'Ellipses']
 const SHAPE_LABELS_TO_OBJECT_TYPES: { [key: string]: string } = {
-	Rectangles: 'rectangles',
-	Polygons: 'polygons',
-	Ellipses: 'ovals', // designers refer to them as ellipses
+	Rectangles: 'Rectangle',
+	Polygons: 'Polygon',
+	Ellipses: 'Oval', // designers refer to them as ellipses
+}
+
+type Controls = {
+	shapes: {
+		checkbox: CheckboxControl
+		name: string
+	}[]
+	colors: {
+		checkbox: CheckboxControl
+		name: string
+		space: ColorSpace
+	}[]
 }
 
 const showDialog = () => {
@@ -27,17 +39,7 @@ const showDialog = () => {
 	const column = dialog.dialogColumns.add({})
 
 	// keep a reference to the controls we will add
-	let controls: {
-		shapes: {
-			checkbox: CheckboxControl
-			name: string
-		}[]
-		colors: {
-			checkbox: CheckboxControl
-			name: string
-			space: string
-		}[]
-	} = {
+	let controls: Controls = {
 		shapes: [],
 		colors: [],
 	}
@@ -69,7 +71,7 @@ const showDialog = () => {
 				controls.colors.push({
 					checkbox: columnColors.checkboxControls.add({ staticLabel, checkedState: true }),
 					name: color.name,
-					space: color.space.toString(),
+					space: color.space,
 				})
 			}
 		}
@@ -78,18 +80,68 @@ const showDialog = () => {
 	const result = dialog.show()
 
 	if (result) {
-		let selectedShapes: string[] = []
-		for (let i: number = 0; i < controls.shapes.length; i++) {
-			const control = controls.shapes[i]
-			if (control.checkbox.checkedState) {
-				selectedShapes.push(control.name)
-			}
-		}
-
+		selectObjects(controls)
 		dialog.destroy()
 	} else {
 		dialog.destroy()
 	}
+}
+
+const selectObjects = (controls: Controls) => {
+	// prepare a list of selected shapes
+	let selectedShapes: string[] = []
+	for (let i: number = 0; i < controls.shapes.length; i++) {
+		const control = controls.shapes[i]
+		if (control.checkbox.checkedState) {
+			selectedShapes.push(control.name)
+		}
+	}
+
+	// prepare a list of selected colors, by color space
+	const selectedColors: { [key: string]: string[] } = {}
+	for (let i: number = 0; i < controls.colors.length; i++) {
+		const control = controls.colors[i]
+		if (control.checkbox.checkedState) {
+			if (!selectedColors[control.space.toString()]) {
+				selectedColors[control.space.toString()] = []
+			}
+			selectedColors[control.space.toString()].push(control.name)
+		}
+	}
+
+	// find eligible items
+	const objectsToSelect: PageItem[] = []
+	const activeWindow = app.activeWindow as LayoutWindow
+	const pageItems = activeWindow.activeSpread.allPageItems
+
+	for (let i: number = 0; i < pageItems.length; i++) {
+		const item = pageItems[i]
+		// filter by matching shape
+		if (inArray(item.constructor.name, selectedShapes)) {
+			const fillColor = item.fillColor as Color
+			// filter by matching fill color
+			// disregard stroke color
+			if (fillColor.hasOwnProperty('space') && inArray(fillColor.name, selectedColors[fillColor.space])) {
+				objectsToSelect.push(item)
+			}
+		}
+	}
+
+	// select eligible items
+	app.activeDocument.select(objectsToSelect)
+}
+
+const inArray = (stringToFind: string, arrayToSearch: string[]) => {
+	let myResult = false
+	if (arrayToSearch) {
+		for (let i: number = 0; i < arrayToSearch.length; i++) {
+			if (arrayToSearch[i] == stringToFind) {
+				myResult = true
+				break
+			}
+		}
+	}
+	return myResult
 }
 
 main()
