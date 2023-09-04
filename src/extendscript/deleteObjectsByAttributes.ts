@@ -48,10 +48,10 @@ const showDialog = () => {
 	const shapesRow = column.dialogRows.add({})
 	const borderPanel = shapesRow.borderPanels.add({})
 	borderPanel.staticTexts.add({ staticLabel: 'Shape:' })
-	const columnShapes = borderPanel.dialogColumns.add({})
+	const shapesColumn = borderPanel.dialogColumns.add({})
 	for (let i: number = 0; i < SHAPE_LABELS.length; i++) {
 		controls.shapes.push({
-			checkbox: columnShapes.checkboxControls.add({ staticLabel: SHAPE_LABELS[i], checkedState: true }),
+			checkbox: shapesColumn.checkboxControls.add({ staticLabel: SHAPE_LABELS[i], checkedState: true }),
 			name: SHAPE_LABELS_TO_OBJECT_TYPES[SHAPE_LABELS[i]],
 		})
 	}
@@ -62,14 +62,14 @@ const showDialog = () => {
 		const colorsRow = column.dialogRows.add({})
 		const borderPanel = colorsRow.borderPanels.add({})
 		borderPanel.staticTexts.add({ staticLabel: 'Color:' })
-		const columnColors = borderPanel.dialogColumns.add({})
+		const colorsColumn = borderPanel.dialogColumns.add({})
 		for (let i: number = 0; i < colors.length; i++) {
 			const color = colors[i]
 			if (color.name) {
 				// only show named colors
 				const staticLabel = `${color.name} (${color.space})`
 				controls.colors.push({
-					checkbox: columnColors.checkboxControls.add({ staticLabel, checkedState: true }),
+					checkbox: colorsColumn.checkboxControls.add({ staticLabel, checkedState: true }),
 					name: color.name,
 					space: color.space,
 				})
@@ -101,11 +101,12 @@ const selectObjects = (controls: Controls) => {
 	const selectedColors: { [key: string]: string[] } = {}
 	for (let i: number = 0; i < controls.colors.length; i++) {
 		const control = controls.colors[i]
+		const space = control.space.toString()
 		if (control.checkbox.checkedState) {
-			if (!selectedColors[control.space.toString()]) {
-				selectedColors[control.space.toString()] = []
+			if (!selectedColors[space]) {
+				selectedColors[space] = []
 			}
-			selectedColors[control.space.toString()].push(control.name)
+			selectedColors[space].push(control.name)
 		}
 	}
 
