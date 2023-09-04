@@ -29,29 +29,60 @@ const showDialog = () => {
 
 	// keep a reference to the controls we will add
 	let controls: {
-		shapes: CheckboxControl[]
+		shapes: {
+			checkbox: CheckboxControl
+			name: string
+		}[]
+		colors: {
+			checkbox: CheckboxControl
+			name: string
+			space: string
+		}[]
 	} = {
 		shapes: [],
+		colors: [],
 	}
 
 	// populate shapes
 	borderPanel.staticTexts.add({ staticLabel: 'Shape:' })
 	const columnShapes = borderPanel.dialogColumns.add({})
 	for (let i: number = 0; i < SHAPE_LABELS.length; i++) {
-		controls.shapes.push(columnShapes.checkboxControls.add({ staticLabel: SHAPE_LABELS[i], checkedState: true }))
+		controls.shapes.push({
+			checkbox: columnShapes.checkboxControls.add({ staticLabel: SHAPE_LABELS[i], checkedState: true }),
+			name: SHAPE_LABELS_TO_OBJECT_TYPES[SHAPE_LABELS[i]],
+		})
+	}
+
+	// populate colors
+	const colors = app.activeDocument.colors
+	if (colors.length) {
+		borderPanel.staticTexts.add({ staticLabel: 'Color:' })
+		const columnColors = borderPanel.dialogColumns.add({})
+		for (let i: number = 0; i < colors.length; i++) {
+			const color = colors[i]
+			if (color.name) {
+				// only show named colors
+				const staticLabel = `${color.name} (${color.space})`
+				controls.colors.push({
+					checkbox: columnColors.checkboxControls.add({ staticLabel, checkedState: true }),
+					name: color.name,
+					space: color.space.toString(),
+				})
+			}
+		}
 	}
 
 	const result = dialog.show()
 
 	if (result) {
-		let selectedShaped: string[] = []
+		let selectedShapes: string[] = []
 		for (let i: number = 0; i < controls.shapes.length; i++) {
-			const checkbox = controls.shapes[i]
-			if (checkbox.checkedState) {
-				selectedShaped.push(SHAPE_LABELS_TO_OBJECT_TYPES[checkbox.staticLabel])
+			const control = controls.shapes[i]
+			if (control.checkbox.checkedState) {
+				selectedShapes.push(control.name)
 			}
 		}
-		alert(selectedShaped.toString())
+
 		dialog.destroy()
 	} else {
 		dialog.destroy()
