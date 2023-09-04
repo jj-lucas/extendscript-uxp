@@ -1,106 +1,74 @@
 {
-  "id": "Test-92r7ia",
-  "name": "lego-case-uxt",
-  "version": "1.0.0",
-  "main": "index.html",
-  "manifestVersion": 5,
-  "host": [
-    {
-      "app": "ID",
-      "minVersion": "18.5.0"
-    }
-  ],
-  "entrypoints": [
-    {
-      "type": "panel",
-      "id": "demos",
-      "label": {
-        "default": "React Panel"
-      },
-      "minimumSize": {
-        "width": 230,
-        "height": 200
-      },
-      "maximumSize": {
-        "width": 2000,
-        "height": 2000
-      },
-      "preferredDockedSize": {
-        "width": 230,
-        "height": 300
-      },
-      "preferredFloatingSize": {
-        "width": 230,
-        "height": 300
-      },
-      "icons": [
-        {
-          "width": 32,
-          "height": 32,
-          "path": "icons/icon_D.png",
-          "scale": [
-            1,
-            2
-          ],
-          "theme": [
-            "dark",
-            "darkest"
-          ],
-          "species": [
-            "generic"
-          ]
-        },
-        {
-          "width": 32,
-          "height": 32,
-          "path": "icons/icon_N.png",
-          "scale": [
-            1,
-            2
-          ],
-          "theme": [
-            "lightest",
-            "light"
-          ],
-          "species": [
-            "generic"
-          ]
-        }
-      ]
-    }
-  ],
-  "icons": [
-    {
-      "width": 32,
-      "height": 32,
-      "path": "icons/icon_D.png",
-      "scale": [
-        1,
-        2
-      ],
-      "theme": [
-        "dark",
-        "darkest"
-      ],
-      "species": [
-        "generic"
-      ]
-    },
-    {
-      "width": 32,
-      "height": 32,
-      "path": "icons/icon_N.png",
-      "scale": [
-        1,
-        2
-      ],
-      "theme": [
-        "lightest",
-        "light"
-      ],
-      "species": [
-        "generic"
-      ]
-    }
-  ]
+	"id": "Lego-case-UXT",
+	"name": "lego-case-uxt",
+	"version": "1.0.0",
+	"main": "index.html",
+	"manifestVersion": 5,
+	"host": [
+		{
+			"app": "ID",
+			"minVersion": "18.5.0"
+		}
+	],
+	"entrypoints": [
+		{
+			"type": "panel",
+			"id": "demos",
+			"label": {
+				"default": "Style replacement panel"
+			},
+			"minimumSize": {
+				"width": 230,
+				"height": 200
+			},
+			"maximumSize": {
+				"width": 2000,
+				"height": 2000
+			},
+			"preferredDockedSize": {
+				"width": 230,
+				"height": 300
+			},
+			"preferredFloatingSize": {
+				"width": 230,
+				"height": 300
+			},
+			"icons": [
+				{
+					"width": 32,
+					"height": 32,
+					"path": "icons/icon_D.png",
+					"scale": [1, 2],
+					"theme": ["dark", "darkest"],
+					"species": ["generic"]
+				},
+				{
+					"width": 32,
+					"height": 32,
+					"path": "icons/icon_N.png",
+					"scale": [1, 2],
+					"theme": ["lightest", "light"],
+					"species": ["generic"]
+				}
+			]
+		}
+	],
+	"icons": [
+		{
+			"width": 32,
+			"height": 32,
+			"path": "icons/icon_D.png",
+			"scale": [1, 2],
+			"theme": ["dark", "darkest"],
+			"species": ["generic"]
+		},
+		{
+			"width": 32,
+			"height": 32,
+			"path": "icons/icon_N.png",
+			"scale": [1, 2],
+			"theme": ["lightest", "light"],
+			"species": ["generic"]
+		}
+	]
 }
