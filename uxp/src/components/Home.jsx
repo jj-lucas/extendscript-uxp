@@ -40,6 +40,8 @@ export const Home = () => {
 		// log results
 		if (affectedItems) {
 			alert(`Affected ${affectedItems} items`)
+		} else {
+			alert(`No items were eligible for replacement`)
 		}
 	}
 
