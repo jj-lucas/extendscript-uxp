@@ -1,3 +1,5 @@
+import { ShowDocName } from './test'
+
 const main = () => {
 	app.scriptPreferences.userInteractionLevel = UserInteractionLevels.INTERACT_WITH_ALL
 
@@ -12,6 +14,8 @@ const main = () => {
 	} else {
 		alert('No documents are open. Please open a document and try again.')
 	}
+
+	ShowDocName()
 }
 
 const SHAPE_LABELS = ['Rectangles', 'Polygons', 'Ellipses']
